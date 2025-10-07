@@ -1,5 +1,5 @@
 const { v4: uuidv4 } = require('uuid');
-let products = require('../data/products')
+let products = require('../data/products');
 
 // GET all products (filtering, search, pagination)
 exports.getAllProducts = (req, res) => {
@@ -17,7 +17,7 @@ exports.getAllProducts = (req, res) => {
     }
 
     const start = (page - 1) * limit;
-    const paginated = result.slice(start,  start + +limit);
+    const paginated = result.slice(start, start + +limit);
 
     res.json({
         total: result.length,
@@ -28,7 +28,7 @@ exports.getAllProducts = (req, res) => {
 };
 
 // GET product by ID 
-exports.getProductById = (req, res, next) => {
+exports.getProductsById = (req, res, next) => {
     const product = products.find(p => p.id === req.params.id);
     if (!product) {
         const err = new Error('Product not found');
@@ -39,10 +39,10 @@ exports.getProductById = (req, res, next) => {
 };
 
 // POST new product
-exports.createProducts = (req, res, next) => {
+exports.createProduct = (req, res, next) => {
     try {
-        const { name, decsription, price, category, inStock } = req.body;
-        const newProduct = { id: uuidv4(), name, decsription, price, category, innStock };
+        const { name, description, price, category, inStock } = req.body;
+        const newProduct = { id: uuidv4(), name, description, price, category, inStock };
         products.push(newProduct);
         res.status(201).json(newProduct);
     } catch (err) {
@@ -52,14 +52,14 @@ exports.createProducts = (req, res, next) => {
 
 // PUT update product 
 exports.updateProduct = (req, res, next) => {
-    try { 
+    try {
         const index = products.findIndex(p => p.id === req.params.id);
         if (index === -1) {
             const err = new Error('Product not found');
             err.status = 404;
             throw err;
         }
-        product[index] = {...products[index], ...req.body };
+        products[index] = { ...products[index], ...req.body };
         res.json(products[index]);
     } catch (err) {
         next(err);
@@ -70,7 +70,7 @@ exports.updateProduct = (req, res, next) => {
 exports.deleteProduct = (req, res, next) => {
     try {
         const index = products.findIndex(p => p.id === req.params.id);
-        if ( index === -1) {
+        if (index === -1) {
             const err = new Error('Product not found');
             err.status = 404;
             throw err;

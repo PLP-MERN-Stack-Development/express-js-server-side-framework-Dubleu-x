@@ -2,22 +2,35 @@ const express = require('express');
 const router = express.Router();
 
 const {
-    getAllProducts,
-    getProductsById,
-    createProduct,
-    updateProduct,
-    deleteProduct,
-    getProductStats
+  getAllProducts,
+  getProductsById,
+  createProduct,
+  updateProduct,
+  deleteProduct,
+  getProductStats
 } = require('../controllers/productController');
 
-const auth = require('../middleware/validateProduct');
+const auth = require('../middleware/auth');
+const validateProduct = require('../middleware/validateProduct');
 
-// CRUD Routes
+// CRUD + stats routes
+
+// GET all products
 router.get('/', getAllProducts);
-router.get('stats', getProductStats);
+
+// GET product stats
+router.get('/stats', getProductStats);
+
+// GET product by ID
 router.get('/:id', getProductsById);
-router.get('/', auth, validateProduct, createProduct);
-router.get('/:id', auth, validateProduct, updateProduct);
-router.get('/:id', auth, deleteProduct);
+
+// CREATE new product
+router.post('/', auth, validateProduct, createProduct);
+
+// UPDATE product by ID
+router.put('/:id', auth, validateProduct, updateProduct);
+
+// DELETE product by ID
+router.delete('/:id', auth, deleteProduct);
 
 module.exports = router;
